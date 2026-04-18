@@ -2,9 +2,9 @@ import os
 
 from flask import Flask, redirect, render_template, url_for
 
-from .config import Config
-from .extensions import db, login_manager
-from .models import User
+from config import Config
+from extensions import db, login_manager
+from models import User
 
 
 def create_app(config_class=Config):
