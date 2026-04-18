@@ -1,19 +1,16 @@
 from flask import Flask
-from extensions import *   # if you use db/login manager etc
+from config import Config
 
 def create_app():
     app = Flask(__name__)
-
-    # Load config
-    from config import Config
     app.config.from_object(Config)
 
-    # Initialize extensions (if any)
-    # db.init_app(app)
-    # login_manager.init_app(app)
+    # Import modules (NO *)
+    import auth
+    import chat
 
-    # Register routes (IMPORTANT)
-    from auth import *
-    from chat import *
+    # If using Blueprints (better structure)
+    # app.register_blueprint(auth.bp)
+    # app.register_blueprint(chat.bp)
 
     return app
