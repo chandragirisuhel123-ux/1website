@@ -5,4 +5,3 @@ flask-sqlalchemy
 Werkzeug
 openai
 reportlab
-streamlit
