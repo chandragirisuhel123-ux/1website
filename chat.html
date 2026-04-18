@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Chat | Loyola CS Digital Assistant{% endblock %}
+
+{% block body %}
+<main class="mx-auto flex min-h-screen max-w-7xl flex-col gap-6 px-6 py-6 lg:flex-row">
+    {% include "partials/sidebar.html" %}
+
+    <section class="flex min-h-[82vh] flex-1 flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-glass backdrop-blur-2xl">
+        <header class="border-b border-white/10 px-6 py-5">
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-300">Assistant Chat</p>
+            <h1 class="mt-2 text-2xl font-semibold text-white">Ask anything about Loyola College</h1>
+        </header>
+
+        <div id="chat-log" class="flex-1 space-y-4 overflow-y-auto px-6 py-6">
+            <div class="max-w-3xl rounded-3xl border border-white/10 bg-slate-900/70 px-5 py-4 text-slate-100">
+                <p class="text-sm text-slate-300">Assistant</p>
+                <div class="prose prose-invert max-w-none prose-p:my-2">Hello! I am your college assistant bot. How can I help you today?</div>
+            </div>
+        </div>
+
+        <div class="border-t border-white/10 p-5">
+            <div class="mb-4 flex flex-wrap gap-2">
+                {% for topic in ["faculty", "fees", "courses", "library", "hostel", "admission", "principal", "hod", "scholarships", "creator"] %}
+                    <button type="button" class="topic-btn rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs uppercase tracking-wide text-slate-200 transition hover:bg-white/10" data-topic="{{ topic }}">{{ topic }}</button>
+                {% endfor %}
+            </div>
+            <form id="chat-form" class="flex gap-3">
+                <input id="chat-input" type="text" placeholder="Ask anything about your college..." class="flex-1 rounded-2xl border border-white/10 bg-slate-900/70 px-4 py-4 text-white outline-none transition focus:border-cyan-400">
+                <button type="submit" class="rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-fuchsia-500 px-6 py-4 font-medium text-white">Send</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<script>
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("chat-input");
+    const chatLog = document.getElementById("chat-log");
+    const topicButtons = document.querySelectorAll(".topic-btn");
+
+    function appendMessage(role, html, images = []) {
+        const wrapper = document.createElement("div");
+        wrapper.className = role === "user"
+            ? "ml-auto max-w-3xl rounded-3xl border border-cyan-400/20 bg-cyan-500/10 px-5 py-4 text-right text-slate-100"
+            : "max-w-3xl rounded-3xl border border-white/10 bg-slate-900/70 px-5 py-4 text-slate-100";
+
+        const label = document.createElement("p");
+        label.className = "text-sm text-slate-300";
+        label.textContent = role === "user" ? "You" : "Assistant";
+        wrapper.appendChild(label);
+
+        const content = document.createElement("div");
+        content.className = "prose prose-invert mt-2 max-w-none prose-p:my-2";
+        content.innerHTML = html;
+        wrapper.appendChild(content);
+
+        if (images.length) {
+            const gallery = document.createElement("div");
+            gallery.className = "mt-4 flex flex-wrap gap-3";
+            images.forEach((src) => {
+                const img = document.createElement("img");
+                img.src = src;
+                img.alt = "Response image";
+                img.className = "h-28 w-28 rounded-2xl object-cover ring-1 ring-white/10";
+                gallery.appendChild(img);
+            });
+            wrapper.appendChild(gallery);
+        }
+
+        chatLog.appendChild(wrapper);
+        chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    async function sendMessage(message) {
+        appendMessage("user", message);
+        input.value = "";
+
+        const response = await fetch("{{ url_for('chat.chat_message') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            appendMessage("assistant", data.error || "Something went wrong.");
+            return;
+        }
+
+        appendMessage("assistant", data.answer, data.images || []);
+    }
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const message = input.value.trim();
+        if (!message) {
+            return;
+        }
+        await sendMessage(message);
+    });
+
+    topicButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
+            await sendMessage(button.dataset.topic);
+        });
+    });
+</script>
+{% endblock %}

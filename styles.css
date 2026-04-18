@@ -1,0 +1,15 @@
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.prose a {
+    color: #67e8f9;
+}
+
+.prose button {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    padding: 0.5rem 0.875rem;
+    background: rgba(255, 255, 255, 0.04);
+    color: #e2e8f0;
+}

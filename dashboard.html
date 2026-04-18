@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Loyola CS Digital Assistant{% endblock %}
+
+{% block body %}
+<main class="mx-auto flex min-h-screen max-w-7xl flex-col gap-6 px-6 py-6 lg:flex-row">
+    {% include "partials/sidebar.html" %}
+
+    <section class="flex-1 space-y-6">
+        <div class="rounded-3xl border border-white/10 bg-white/10 p-8 shadow-glass backdrop-blur-2xl">
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-300">Dashboard</p>
+            <h1 class="mt-3 text-3xl font-semibold text-white">Welcome, {{ user.username }}</h1>
+            <p class="mt-3 max-w-2xl text-slate-300">Your assistant is now running on Flask with secure authentication, a structured backend, and the same chatbot logic from your original application.</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+                <a href="{{ url_for('chat.chat') }}" class="rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-fuchsia-500 px-5 py-3 text-sm font-medium text-white">Open Chat</a>
+                {% if current_user.is_admin() %}
+                    <a href="{{ url_for('admin.admin') }}" class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-slate-100">Admin Panel</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2">
+            <div class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-glass backdrop-blur-xl">
+                <p class="text-sm uppercase tracking-[0.3em] text-cyan-300">Features</p>
+                <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                    <li>Secure login and registration with hashed passwords</li>
+                    <li>SQLite user management with SQLAlchemy ORM</li>
+                    <li>Dedicated admin view for account oversight</li>
+                    <li>Chat interface connected to your preserved answer logic</li>
+                </ul>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-glass backdrop-blur-xl">
+                <p class="text-sm uppercase tracking-[0.3em] text-cyan-300">Suggested Topics</p>
+                <div class="mt-4 flex flex-wrap gap-3">
+                    {% for topic in ["Faculty", "Fees", "Courses", "Library", "Hostel", "Admission", "Principal", "HOD", "Scholarships", "Creator"] %}
+                        <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">{{ topic }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
