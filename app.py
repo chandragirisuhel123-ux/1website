@@ -5,18 +5,6 @@ import math
 # -------------------------------
 # CUSTOM UI
 # -------------------------------
-st.markdown("""
-    <style>
-    body {
-        background-color: #fafafa;
-    }
-    .stChatMessage {
-        border-radius: 15px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-    </style>
-""", unsafe_allow_html=True)
 # -------------------------------
 # LOGIN SYSTEM
 # -------------------------------
