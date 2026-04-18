@@ -9,7 +9,7 @@ from flask import (
 )
 from flask_login import current_user, login_required
 
-from ..services.chatbot_loader import get_chatbot_answer, get_response_images
+from services.chatbot_loader import get_chatbot_answer, get_response_images
 
 
 chat_bp = Blueprint("chat", __name__)
