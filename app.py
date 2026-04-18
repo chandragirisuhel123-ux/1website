@@ -5,12 +5,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Import modules (NO *)
     import auth
     import chat
-
-    # If using Blueprints (better structure)
-    # app.register_blueprint(auth.bp)
-    # app.register_blueprint(chat.bp)
 
     return app
