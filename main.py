@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template
-from flask_login import current_user, login_required
+import os
+from app import create_app
 
+app = create_app()
 
-main_bp = Blueprint("main", __name__)
+# 👇 THIS LINE IS IMPORTANT FOR GUNICORN
+application = app
 
-
-@main_bp.route("/dashboard")
-@login_required
-def dashboard():
-    return render_template("dashboard.html", user=current_user)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
